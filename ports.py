@@ -1,5 +1,8 @@
+#!/usr/bin/env python3
+
 import subprocess
 import re
+import sys
 
 def get_listening_ports(container_name):
     """
@@ -57,10 +60,6 @@ def get_listening_ports(container_name):
 
                 local_port = int(port_hex, 16)
 
-                # Filter for typical server bindings
-                if local_ip not in ['127.0.0.1', '0.0.0.0', '::1', '::'] and not local_ip.startswith('::ffff:'):
-                    continue
-
                 listening_ports.append({
                     'protocol': protocol,
                     'local_address': local_ip,
@@ -73,8 +72,13 @@ def get_listening_ports(container_name):
     return listening_ports
 
 # Get container name from user input
-container_name = input("Enter the name or ID of the Docker container: ")
-
+#container_name = input("Enter the name or ID of the Docker container: ")
+try:
+    container_name = sys.argv[1]
+except:
+    print('lol monky enter name')
+    sys.exit(1)
+    
 ports = get_listening_ports(container_name)
 
 # Print the results
